@@ -5,12 +5,15 @@
  * @format
  * @flow strict-local
  */
-
+import 'react-native-gesture-handler';
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 
 // import EventList from './EventList';
-import SignupScreen from './screens/auth/Signup';
+import {SignupScreen, LoginScreen} from './screens/auth';
+
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 // import {StackNaviagtor} from 'react-navigation'
 
 import {
@@ -20,16 +23,34 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
+const Stack = createStackNavigator();
 const App = () => {
   return (
     <>
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <View>
-          <SignupScreen />
-          {/* <Button title="123" /> */}
-        </View>
-      </View>
+      {/* <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'black',
+        }}> */}
+        {/* <View> */}
+        {/* <LoginScreen /> */}
+        {/* <SignupScreen /> */}
+        {/* <Button title="123" /> */}
+        {/* </View> */}
+
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{title: ' Please Login to Continue'}}
+            />
+            <Stack.Screen name="Register"  options={{title: 'Create An Account'}} component={SignupScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      {/* </View> */}
     </>
   );
 };
