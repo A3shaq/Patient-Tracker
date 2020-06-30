@@ -1,15 +1,10 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import Logo from '../../assests/images/logo.png';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
@@ -22,7 +17,7 @@ const Login = (props) => {
       key === 'Email' ? setEmail(e) : setPassword(e);
     }
   };
-  const {navigation}=props
+  const {navigation} = props;
   return (
     <View style={styles.mainView}>
       <View
@@ -37,26 +32,28 @@ const Login = (props) => {
 
       <Text style={styles.heading}>Login</Text>
       <View>
-        <TextInput
-          style={styles.inputSyle}
+        <Input
           placeholder="Email"
-          placeholderTextColor="white"
+          placeholderTextColor="black"
           value={email}
           onChangeText={(text) => handlChange(text, 'Email')}
         />
-        <TextInput
-          style={styles.inputSyle}
-          placeholderTextColor="white"
+        <Input
+          placeholderTextColor="black"
           placeholder="Password"
           value={password}
           onChangeText={(text) => handlChange(text, 'Password')}
         />
       </View>
       <View>
-        <TouchableOpacity style={styles.buttonStyles}>
+        <Button onPress={() => alert('Login Button')}>
           <Text style={styles.textColor}>SignIn</Text>
-        </TouchableOpacity>
-        <Text style={styles.link} onPress={()=>navigation.navigate("Register")}>Don't have an account?</Text>
+        </Button>
+        <Text
+          style={styles.link}
+          onPress={() => navigation.navigate('Register')}>
+          Don't have an account?
+        </Text>
       </View>
     </View>
   );
@@ -65,18 +62,8 @@ const Login = (props) => {
 export default Login;
 
 const styles = StyleSheet.create({
-  inputSyle: {
-    borderWidth: 2,
-    borderColor: 'lightblue',
-    maxWidth: 300,
-    width: 500,
-    padding: 8,
-    borderRadius: 8,
-    marginTop: 10,
-    color: 'white',
-  },
   heading: {
-    color: 'red',
+    color: 'black',
     fontSize: 30,
     textAlign: 'center',
     // fontStyle:"italic",
@@ -86,13 +73,7 @@ const styles = StyleSheet.create({
     height: 75,
     width: 75,
   },
-  buttonStyles: {
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: '#FF4235',
-    marginTop: 20,
-    width:300
-  },
+
   textColor: {
     textAlign: 'center',
     color: 'white',
@@ -109,8 +90,8 @@ const styles = StyleSheet.create({
   },
   mainView: {
     flex: 1,
-    justifyContent: "flex-start",
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: 'black',
+    // backgroundColor: 'black',
   },
 });

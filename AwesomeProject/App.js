@@ -34,22 +34,44 @@ const App = () => {
           alignItems: 'center',
           backgroundColor: 'black',
         }}> */}
-        {/* <View> */}
-        {/* <LoginScreen /> */}
-        {/* <SignupScreen /> */}
-        {/* <Button title="123" /> */}
-        {/* </View> */}
+      {/* <View> */}
+      {/* <LoginScreen /> */}
+      {/* <SignupScreen /> */}
+      {/* <Button title="123" /> */}
+      {/* </View> */}
 
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{title: ' Please Login to Continue'}}
-            />
-            <Stack.Screen name="Register"  options={{title: 'Create An Account'}} component={SignupScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{
+              title: ' Please Login to Continue',
+              headerStyle: {
+                backgroundColor: '#4eb6bb',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Register"
+            options={{
+              title: 'Back to Login',
+              headerStyle: {
+                backgroundColor: '#4eb6bb',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+            component={SignupScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
       {/* </View> */}
     </>
   );
