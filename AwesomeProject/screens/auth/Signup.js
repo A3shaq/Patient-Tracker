@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
 import {RegisterWithFirebase} from '../../config/firebase';
 import Logo from '../../assests/images/logo.png';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {connect} from 'react-redux';
+import {signUpRequest} from '../../redux/actions/Auth';
+import {store} from '../../redux/store';
 
 const Signup = (props) => {
   const [name, setName] = useState('');
@@ -24,64 +27,75 @@ const Signup = (props) => {
   };
 
   const onRegister = () => {
-    alert('Register');
-    RegisterWithFirebase(name, email, password);
+    // alert('Register');
+    console.log('register props', signUpRequest);
+    props.signUpRequest(name, email, password);
 
-    alert('success');
+    // alert('success');
   };
   console.log('my name is', name);
   console.log('my email is', email);
   console.log('my password is', password);
   let {navigation} = props;
   return (
-    <View style={styles.mainView}>
-      <View
-        style={{
-          flex: 0.6,
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Image source={Logo} style={styles.imageStyle} />
-      </View>
-      <Text style={styles.heading}>Signup</Text>
-      <View>
-        <Input
-          placeholder="Name"
-          placeholderTextColor="black"
-          // style={{borderStyle:["solid","dotted","dashed"]}}
-          value={name}
-          onChangeText={(text) => handlChange(text, 'Name')}
-        />
+    <ScrollView>
+      <View style={styles.mainView}>
+        <View
+          style={{
+            flex: 0.6,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image source={Logo} style={styles.imageStyle} />
+        </View>
+        <Text style={styles.heading}>Signup</Text>
+        <View>
+          <Input
+            placeholder="Name"
+            placeholderTextColor="black"
+            // style={{borderStyle:["solid","dotted","dashed"]}}
+            value={name}
+            onChangeText={(text) => handlChange(text, 'Name')}
+          />
 
-        <Input
-          placeholder="Email"
-          placeholderTextColor="black"
-          value={email}
-          onChangeText={(text) => handlChange(text, 'Email')}
-        />
+          <Input
+            placeholder="Email"
+            placeholderTextColor="black"
+            value={email}
+            onChangeText={(text) => handlChange(text, 'Email')}
+          />
 
-        <Input
-         placeholderTextColor="black"
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => handlePassword(text, 'Password')}
-          secureTextEntry={true} 
-        />
+          <Input
+            placeholderTextColor="black"
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => handlePassword(text, 'Password')}
+            secureTextEntry={true}
+          />
+        </View>
+        <View>
+          <Button onPress={onRegister}>
+            <Text style={styles.textColor}>Register</Text>
+          </Button>
+          <Text
+            style={styles.link}
+            onPress={() => navigation.navigate('Login')}>
+            Already have an account?
+          </Text>
+        </View>
       </View>
-      <View>
-        <Button onPress={onRegister}>
-          <Text style={styles.textColor}>Register</Text>
-        </Button>
-        <Text style={styles.link} onPress={() => navigation.navigate('Login')}>
-          Already have an account?
-        </Text>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
-export default Signup;
+export default connect(
+  (storeState) => ({
+    authData: storeState.AuthReducer,
+  }),
+  {signUpRequest},
+)(Signup);
+
 const styles = StyleSheet.create({
   heading: {
     color: 'black',
@@ -111,8 +125,9 @@ const styles = StyleSheet.create({
   },
   mainView: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'black',
+    marginTop: 60,
   },
 });
