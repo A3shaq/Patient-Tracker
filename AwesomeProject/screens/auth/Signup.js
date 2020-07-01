@@ -66,6 +66,7 @@ const Signup = (props) => {
           placeholder="Password"
           value={password}
           onChangeText={(text) => handlePassword(text, 'Password')}
+          secureTextEntry={true} 
         />
       </View>
       <View>
