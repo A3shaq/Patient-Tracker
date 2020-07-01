@@ -7,7 +7,7 @@
  */
 import 'react-native-gesture-handler';
 import React from 'react';
-import {View, Text, StyleSheet,} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
 // import EventList from './EventList';
 import {SignupScreen, LoginScreen} from './screens/auth';
@@ -18,21 +18,21 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 // import {Icon, Left, Button} from 'native-base';
-import Icon from 'react-native-vector-icons/FontAwesome';
-const myIcon = <Icon name="rocket" size={30} color="#900" />;
-// import {StackNaviagtor} from 'react-navigation'
+import Icon from 'react-native-vector-icons/Feather';
 
-// import {
-//   Header,
-//   LearnMoreLinks,
-//   Colors,
-//   DebugInstructions,
-//   ReloadInstructions,
-// } from 'react-native/Libraries/NewAppScreen';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-function Root() {
+const myIcon = (nav) => (
+  <Icon
+    name="menu"
+    size={30}
+    color="black"
+    style={{marginLeft: 5}}
+    onPress={() => nav.navigation.openDrawer()}
+  />
+);
+function Root(props) {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -45,9 +45,7 @@ function Root() {
             backgroundColor: '#4eb6bb',
           },
           headerTintColor: '#fff',
-          headerLeft: () => (
-         myIcon
-          ),
+          headerLeft: () => myIcon(props),
         }}
       />
       {/* <Stack.Screen name="Settings" component={Settings} /> */}
@@ -113,47 +111,5 @@ const App = () => {
     </>
   );
 };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     backgroundColor: 'green',
-//   },
-//   scrollView: {
-//     backgroundColor: Colors.lighter,
-//   },
-//   engine: {
-//     position: 'absolute',
-//     right: 0,
-//   },
-//   body: {
-//     backgroundColor: 'green',
-//   },
-//   sectionContainer: {
-//     marginTop: 32,
-//     paddingHorizontal: 24,
-//   },
-//   sectionTitle: {
-//     fontSize: 24,
-//     fontWeight: '600',
-//     color: Colors.black,
-//   },
-//   sectionDescription: {
-//     marginTop: 8,
-//     fontSize: 18,
-//     fontWeight: '400',
-//     color: Colors.dark,
-//   },
-//   highlight: {
-//     fontWeight: '700',
-//   },
-//   footer: {
-//     color: Colors.dark,
-//     fontSize: 12,
-//     fontWeight: '600',
-//     padding: 4,
-//     paddingRight: 12,
-//     textAlign: 'right',
-//   },
-// });
 
 export default App;

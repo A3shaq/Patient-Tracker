@@ -1,15 +1,12 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
-import Input from '../../components/Input';
+import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import Logo from '../../assests/images/logo.png';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
-import moment from 'moment';
+import Icon from 'react-native-vector-icons/Feather';
 
 const Card = (props) => {
   const {name} = props;
   return (
-    <View style={styles.cardStyles}>
+    <TouchableOpacity style={styles.cardStyles} activeOpacity={0.2} {...props}>
       <View>
         <Image style={{height: 60, width: 60}} source={Logo} />
       </View>
@@ -25,9 +22,9 @@ const Card = (props) => {
         </Text>
       </View>
       <View>
-        <Icon name="rocket" size={30} color="#900" />
+        <Icon name="edit-3" size={30} color="#4eb6bb" onPress={()=>alert("Edit Screen")} />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

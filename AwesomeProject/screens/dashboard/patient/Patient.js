@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import Button from '../../../components/Button';
 import SearchBar from '../../../components/Input';
 import {NavigationContainer} from '@react-navigation/native';
@@ -12,7 +18,7 @@ const Patient = (props) => {
   const {navigation} = props;
   return (
     <View style={styles.filters}>
-      <View style={{height:20}}></View>
+      <View style={{height: 20}}></View>
       <SearchBar placeholder="Search" />
       <View>
         {/* <View> */}
@@ -52,15 +58,13 @@ const Patient = (props) => {
       </View>
 
       <ScrollView>
-        {[1, 2, 3, 4, 5, 6, 8].map((Item, index) => (
-          <PatientCard name="Zain Ahmed" key={index} />
+        {[1, 2, 3, 4, 5, 6, 7,8].map((Item, index) => (
+          <PatientCard
+            name="Zain Ahmed"
+            key={index}
+            onLongPress={() => console.log('onLongPress', index)}
+          />
         ))}
-        {/* <PatientCard/>
-        <PatientCard/>
-        <PatientCard/>
-        <PatientCard/>
-        <PatientCard/>
-        <PatientCard/> */}
       </ScrollView>
     </View>
   );
