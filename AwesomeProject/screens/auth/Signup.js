@@ -28,14 +28,22 @@ const Signup = (props) => {
 
   const onRegister = () => {
     // alert('Register');
-    console.log('register props', signUpRequest);
-    props.signUpRequest(name, email, password);
+    if (name.trim() && email.trim() && password.trim()) {
+      console.log('register props', props);
+      props.signUpRequest(name, email, password)
+      //   // if(cb){
+        props.navigation.navigate('Login');
+      //   // }
+     
+    } else {
+      alert('Fields are not empty');
+    }
 
     // alert('success');
   };
-  console.log('my name is', name);
-  console.log('my email is', email);
-  console.log('my password is', password);
+  // console.log('my name is', name);
+  // console.log('my email is', email);
+  // console.log('my password is', password);
   let {navigation} = props;
   return (
     <ScrollView>
