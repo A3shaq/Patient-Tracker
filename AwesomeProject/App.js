@@ -7,10 +7,8 @@
  */
 import 'react-native-gesture-handler';
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
 import {SignupScreen, LoginScreen} from './screens/auth';
 import {Patient, AddPatient} from './screens/dashboard/patient';
-
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -36,7 +34,7 @@ function Root(props) {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Profile"
+        name="View-Patients"
         component={Patient}
         options={{
           title: 'Patient Records',
@@ -58,7 +56,7 @@ const App = () => {
     <>
       <Provider store={store}>
         <NavigationContainer>
-          {false ? (
+          {true ? (
             <Drawer.Navigator
               initialRouteName="View-Patients"
               // navigationOptions={

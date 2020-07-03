@@ -3,6 +3,9 @@ import {
   SIGNUP_SUCCESS,
   SIGNUP_ERROR,
   SET_USER_DATA_REQUEST,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_ERROR,
 } from '../../config/Types';
 
 export const signUpRequest = (name, email, password) => {
@@ -12,7 +15,6 @@ export const signUpRequest = (name, email, password) => {
     name,
     email,
     password,
-
   };
 };
 
@@ -33,6 +35,27 @@ export const setUser = (userObj) => {
   return {
     type: SET_USER_DATA_REQUEST,
     userObj,
+  };
+};
 
+export const loginRequest = (email, password) => {
+  console.log(' action from action loginRequest', email);
+  return {
+    type: LOGIN_REQUEST,
+    email,
+    password,
+  };
+};
+
+export const loginSuccess = (uid) => {
+  return {
+    type: LOGIN_SUCCESS,
+    uid,
+  };
+};
+
+export const loginError = () => {
+  return {
+    type: LOGIN_ERROR,
   };
 };

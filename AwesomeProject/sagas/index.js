@@ -1,12 +1,7 @@
-import { all } from 'redux-saga/effects'
-import {watchAuthentication} from "./Auth"
-// import { watchAuthActions } from "./Auth"
-
+import {all} from 'redux-saga/effects';
+import {watchAuthentication} from './Auth';
+import {watchPatientSagas} from './Patient';
 
 export default function* rootSaga() {
-  yield all([
-    watchAuthentication()
-    // watchAuthActions(),
-   
-  ]);
+  yield all([watchAuthentication(), watchPatientSagas()]);
 }

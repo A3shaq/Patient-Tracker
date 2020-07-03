@@ -2,12 +2,16 @@ import {put, takeLatest, call} from 'redux-saga/effects';
 import {eventChannel} from 'redux-saga';
 import {
   SIGNUP_REQUSET,
-  SIGNUP_SUCCESS,
-  SIGNUP_ERROR,
   SET_USER_DATA_REQUEST,
+  LOGIN_REQUEST,
 } from '../config/Types';
 import {firebase} from '../config/firebase';
-import {signUpSuccess, signUpError, setUser} from '../redux/actions/Auth';
+import {
+  signUpSuccess,
+  signUpError,
+  setUser,
+  loginSuccess,
+} from '../redux/actions/Auth';
 // import {set} from 'react-native-reanimated';
 
 // function insertEventChanel(item) {
@@ -43,7 +47,7 @@ function* setUserSaga(action) {
       .set(action.userObj);
     console.log(res, 'resssssss');
     alert('Signup Success');
-  
+
     // .then((success) => alert('Signup Successfux`xxxxxxxxxxxxxxxxxxxxxxxxxxxxxll'));
     // console.ignoredYellowBox = ['Setting a timer'];
   } catch (e) {
@@ -75,10 +79,27 @@ function* signUpSaga(action) {
     alert('error');
   }
 }
-
 //signup saga
+
+//login saga
+const loginAPi = (body) => {
+  console.log('loginAPi', body);
+  return firebase.auth().signInWithEmailAndPassword(body.email, body.password);
+};
+function* loginSaga(action) {
+  let res;
+  try {
+    res = yield call(loginAPi, action);
+    console.log(res, 'loginnnnn sucessssss');
+    yield put(loginSuccess(res.user.uid));
+  } catch (e) {
+    alert(e);
+  }
+}
+//login saga
 
 export function* watchAuthentication() {
   yield takeLatest(SIGNUP_REQUSET, signUpSaga);
   yield takeLatest(SET_USER_DATA_REQUEST, setUserSaga);
+  yield takeLatest(LOGIN_REQUEST, loginSaga);
 }

@@ -5,6 +5,8 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {connect} from 'react-redux';
+import {loginRequest} from '../../redux/actions/Auth';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
@@ -17,6 +19,19 @@ const Login = (props) => {
       key === 'Email' ? setEmail(e) : setPassword(e);
     }
   };
+
+  const onSignIn = () => {
+    // alert("View-Patients")
+    if (email.trim() && password.trim()) {
+      console.log('if login');
+      props.loginRequest(email, password);
+     
+      // props.navigation.push('View-Patients');
+    } else {
+      alert('Fields are not empty');
+    }
+  };
+  console.log("login component",props.authData)
   const {navigation} = props;
   return (
     <ScrollView>
@@ -48,7 +63,7 @@ const Login = (props) => {
           />
         </View>
         <View>
-          <Button onPress={() => alert('Login Button')}>
+          <Button onPress={onSignIn}>
             <Text style={styles.textColor}>SignIn</Text>
           </Button>
           <Text
@@ -62,7 +77,12 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+export default connect(
+  (storeState) => ({
+    authData: storeState.AuthReducer,
+  }),
+  {loginRequest},
+)(Login);
 
 const styles = StyleSheet.create({
   heading: {

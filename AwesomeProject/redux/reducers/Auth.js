@@ -1,8 +1,15 @@
-import {SIGNUP_REQUSET, SIGNUP_SUCCESS, SIGNUP_ERROR} from '../../config/Types';
+import {
+  SIGNUP_REQUSET,
+  SIGNUP_SUCCESS,
+  SIGNUP_ERROR,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_ERROR,
+} from '../../config/Types';
 
 const INITIAL_STATE = {
   loading: false,
-  users: [],
+  userToken: '',
 };
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -17,7 +24,20 @@ export default (state = INITIAL_STATE, action) => {
       });
 
     case SIGNUP_ERROR:
-      console.log('GET_USERS_SETTINGS_ERROR');
+      return Object.assign({}, state, {loading: false});
+
+    case LOGIN_REQUEST:
+      console.log('LOGIN_REQUEST Reducer');
+      return Object.assign({}, state, {loading: true});
+
+    case LOGIN_SUCCESS:
+      console.log('LOGIN_SUCCESS', action);
+      return Object.assign({}, state, {
+        loading: false,
+        userToken: action.uid,
+      });
+
+    case LOGIN_ERROR:
       return Object.assign({}, state, {loading: false});
 
     default: {
