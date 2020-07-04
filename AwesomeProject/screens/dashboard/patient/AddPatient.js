@@ -50,7 +50,7 @@ const AddPatient = (props) => {
     ) {
       console.log('okay ki report hai');
       props.addPatientRequest(fields);
-      setFileds({})
+      // setFileds({})
     } else alert('fields are not empty');
   };
   console.log('fields', fields);

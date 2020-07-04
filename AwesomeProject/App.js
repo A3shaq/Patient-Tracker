@@ -26,7 +26,7 @@ const myIcon = (nav) => (
     name="menu"
     size={30}
     color="black"
-    style={{marginLeft: 5}}
+    style={{marginLeft: 15}}
     onPress={() => nav.navigation.openDrawer()}
   />
 );
@@ -109,4 +109,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default  App;

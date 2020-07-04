@@ -1,5 +1,5 @@
 import {put, takeLatest, call} from 'redux-saga/effects';
-import {eventChannel} from 'redux-saga';
+import {AsyncStorage} from 'react-native'
 import {
   SIGNUP_REQUSET,
   SET_USER_DATA_REQUEST,
@@ -91,6 +91,7 @@ function* loginSaga(action) {
   try {
     res = yield call(loginAPi, action);
     console.log(res, 'loginnnnn sucessssss');
+    AsyncStorage.setItem("userToken",JSON.stringify(res.user.uid))
     yield put(loginSuccess(res.user.uid));
   } catch (e) {
     alert(e);

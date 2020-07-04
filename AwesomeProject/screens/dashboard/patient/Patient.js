@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  AsyncStorage,
+  FlatList,
 } from 'react-native';
 import Button from '../../../components/Button';
 import SearchBar from '../../../components/Input';
@@ -13,9 +15,29 @@ import moment from 'moment';
 import DatePicker from 'react-native-datepicker';
 import PatientCard from '../../../components/Card';
 import {Item} from 'native-base';
+import {connect} from 'react-redux';
+import {getPatientRequest} from '../../../redux/actions/Patient';
 const Patient = (props) => {
   const [date, seDate] = useState(moment());
   const {navigation} = props;
+  useEffect(() => {
+    console.log(props.getPatientRequest, 'useEffect');
+    props.getPatientRequest();
+  }, []);
+
+  // console.log(
+  //   'abc',
+  //   AsyncStorage.getItem('userToken').then((item) => {
+  //     if (item) {
+  //       // do the damage
+  //       console.log('async cosole', item);
+  //     }
+  //   }
+    
+  //   ),
+  // );
+
+  console.log('pateint records', props.patientRecords.patients);
   return (
     <View style={styles.filters}>
       <View style={{height: 20}}></View>
@@ -58,19 +80,34 @@ const Patient = (props) => {
       </View>
 
       <ScrollView>
-        {[1, 2, 3, 4, 5, 6, 7,8].map((Item, index) => (
+        {/* <FlatList
+        // style={{marginBottom:0}}
+          data={props.patientRecords.patients}
+          renderItem={({item, index}) => (
+            <PatientCard
+              name={item.patientName}
+              onLongPress={() => console.log('onLongPress', item.doctorId)}
+            />
+          )}
+          keyExtractor={(item) => item.doctorId}
+        /> */}
+        {props.patientRecords.patients.map((item, index) => (
           <PatientCard
-            name="Zain Ahmed"
+            name={item.patientName}
             key={index}
-            onLongPress={() => console.log('onLongPress', index)}
+            onLongPress={() => console.log('onLongPress', item.doctorId)}
           />
         ))}
       </ScrollView>
     </View>
   );
 };
-
-export default Patient;
+export default connect(
+  (storeState) => ({
+    patientRecords: storeState.PatientReducer,
+  }),
+  {getPatientRequest},
+)(Patient);
 
 const styles = StyleSheet.create({
   filters: {

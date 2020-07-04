@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Feather';
 
 const Card = (props) => {
   const {name} = props;
+  console.log("patient name console",name)
   return (
     <TouchableOpacity style={styles.cardStyles} activeOpacity={0.2} {...props}>
       <View>
