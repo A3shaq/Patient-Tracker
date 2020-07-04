@@ -5,11 +5,15 @@ import {
   GET_PATEINT_REQUEST,
   GET_PATEINT_SUCCESS,
   GET_PATEINT_ERROR,
+  DEL_PATEINT_REQUEST,
+  DEL_PATEINT_SUCCESS,
+  DEL_PATEINT_ERROR
 } from '../../config/Types';
 
 const INITIAL_STATE = {
   loading: false,
   patients: [],
+  delLoading:false
 };
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -29,7 +33,7 @@ export default (state = INITIAL_STATE, action) => {
 
     case GET_PATEINT_REQUEST:
       console.log('GET_PATEINT_REQUEST reducer');
-      return Object.assign({}, state, {loading: false});
+      return Object.assign({}, state, {loading: true});
 
     case GET_PATEINT_SUCCESS:
       console.log('GET_PATEINT_SUCCESS', action);
@@ -38,11 +42,28 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       });
 
-    case GET_PATEINT_ERROR:
-      console.log('GET_PATEINT_ERROR Reducers');
-      return Object.assign({}, state, {loading: false});
+
+      case GET_PATEINT_ERROR:
+        console.log('GET_PATEINT_ERROR Reducers');
+        return Object.assign({}, state, {loading: false});
+
+
+      case DEL_PATEINT_REQUEST:
+        console.log('DEL_PATEINT_REQUEST reducer');
+        return Object.assign({}, state, {delLoading: true});
+
+        case DEL_PATEINT_SUCCESS:
+          console.log('DEL_PATEINT_SUCCESS reducer');
+          return Object.assign({}, state, {delLoading: false});
+
+          case DEL_PATEINT_ERROR:
+            console.log('DEL_PATEINT_ERROR reducer');
+            return Object.assign({}, state, {delLoading: false});
+
     default: {
       return state;
     }
   }
+
+ 
 };

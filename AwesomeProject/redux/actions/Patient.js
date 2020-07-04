@@ -5,6 +5,9 @@ import {
   GET_PATEINT_REQUEST,
   GET_PATEINT_SUCCESS,
   GET_PATEINT_ERROR,
+  DEL_PATEINT_REQUEST,
+  DEL_PATEINT_SUCCESS,
+  DEL_PATEINT_ERROR
 } from '../../config/Types';
 
 export const addPatientRequest = (body) => {
@@ -43,5 +46,25 @@ export const getPatientSuccess = (response) => {
 export const getPatientError = () => {
   return {
     type: GET_PATEINT_ERROR,
+  };
+};
+
+export const deletePatientRequest = (doctorId) => {
+  return {
+    type: DEL_PATEINT_REQUEST,
+    doctorId
+  };
+};
+
+export const deletePatientSuccess = () => {
+  return {
+    type: DEL_PATEINT_SUCCESS,
+  };
+};
+
+
+export const deletePatientError = () => {
+  return {
+    type: DEL_PATEINT_ERROR,
   };
 };

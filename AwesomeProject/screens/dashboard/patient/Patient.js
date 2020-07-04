@@ -16,13 +16,17 @@ import DatePicker from 'react-native-datepicker';
 import PatientCard from '../../../components/Card';
 import {Item} from 'native-base';
 import {connect} from 'react-redux';
-import {getPatientRequest} from '../../../redux/actions/Patient';
+import {
+  getPatientRequest,
+  deletePatientRequest,
+} from '../../../redux/actions/Patient';
 const Patient = (props) => {
   const [date, seDate] = useState(moment());
   const {navigation} = props;
   useEffect(() => {
     console.log(props.getPatientRequest, 'useEffect');
     props.getPatientRequest();
+    return () => console.log('Un mOunt=====>');
   }, []);
 
   // console.log(
@@ -33,7 +37,7 @@ const Patient = (props) => {
   //       console.log('async cosole', item);
   //     }
   //   }
-    
+
   //   ),
   // );
 
@@ -91,13 +95,20 @@ const Patient = (props) => {
           )}
           keyExtractor={(item) => item.doctorId}
         /> */}
-        {props.patientRecords.patients.map((item, index) => (
-          <PatientCard
-            name={item.patientName}
-            key={index}
-            onLongPress={() => console.log('onLongPress', item.doctorId)}
-          />
-        ))}
+        {
+          //Array.filter((patient)=>(
+          // patient.includes(serach)
+
+          //         ))
+
+          props.patientRecords.patients.map((item, index) => (
+            <PatientCard
+              name={item.patientName}
+              key={index}
+              onLongPress={() => props.deletePatientRequest(item.patientId)}
+            />
+          ))
+        }
       </ScrollView>
     </View>
   );
@@ -106,7 +117,7 @@ export default connect(
   (storeState) => ({
     patientRecords: storeState.PatientReducer,
   }),
-  {getPatientRequest},
+  {getPatientRequest, deletePatientRequest},
 )(Patient);
 
 const styles = StyleSheet.create({

@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {SignupScreen, LoginScreen} from './screens/auth';
 import {Patient, AddPatient} from './screens/dashboard/patient';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -17,6 +17,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 import {Provider} from 'react-redux';
 import {store} from './redux/store';
+import {isLogedIn} from './config/constant';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -52,11 +53,15 @@ function Root(props) {
   );
 }
 const App = () => {
+  const [isAuthenticated, setIsAuththenticated] = useState(null);
+  useEffect(() => {
+    isLogedIn().then((user) => setIsAuththenticated(user));
+  }, []);
   return (
     <>
       <Provider store={store}>
         <NavigationContainer>
-          {true ? (
+          {isAuthenticated ? (
             <Drawer.Navigator
               initialRouteName="View-Patients"
               // navigationOptions={
@@ -109,4 +114,4 @@ const App = () => {
   );
 };
 
-export default  App;
+export default App;
