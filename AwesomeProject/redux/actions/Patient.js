@@ -7,7 +7,10 @@ import {
   GET_PATEINT_ERROR,
   DEL_PATEINT_REQUEST,
   DEL_PATEINT_SUCCESS,
-  DEL_PATEINT_ERROR
+  DEL_PATEINT_ERROR,
+  UPDATE_PATIENT_REQUEST,
+  UPDATE_PATIENT_SUCCESS,
+  UPDATE_PATIENT_ERROR
 } from '../../config/Types';
 
 export const addPatientRequest = (body) => {
@@ -66,5 +69,25 @@ export const deletePatientSuccess = () => {
 export const deletePatientError = () => {
   return {
     type: DEL_PATEINT_ERROR,
+  };
+};
+
+
+export const updatePatientRequest = (body) => {
+  return {
+    type: UPDATE_PATIENT_REQUEST,
+    body,
+  };
+};
+
+export const updatePatientSuccess = () => {
+  return {
+    type: UPDATE_PATIENT_SUCCESS,
+  };
+};
+
+export const updatePatientError = () => {
+  return {
+    type: UPDATE_PATIENT_ERROR,
   };
 };

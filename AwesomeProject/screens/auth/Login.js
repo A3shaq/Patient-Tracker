@@ -26,7 +26,7 @@ const Login = (props) => {
       console.log('if login');
       props.loginRequest(email, password);
      
-      // props.navigation.push('View-Patients');
+    
     } else {
       alert('Fields are not empty');
     }

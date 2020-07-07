@@ -1,21 +1,34 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 import Icon from 'react-native-vector-icons/Feather';
 import {NavigationContainer} from '@react-navigation/native';
 import {connect} from 'react-redux';
-import {addPatientRequest} from '../../../redux/actions/Patient';
+import {
+  addPatientRequest,
+  updatePatientRequest,
+} from '../../../redux/actions/Patient';
 
 const AddPatient = (props) => {
+  let {navigation, route} = props;
+  let {item} = route.params || {};
+  console.log('item', item);
+
+  const [isUpdate, setIsUpdate] = useState(
+    route.params && route.params.isUpdate ? route.params.isUpdate : false,
+  );
   const [fields, setFileds] = useState({
-    patientName: '',
-    disease: '',
-    mobileNumber: '',
-    email: '',
-    homeAddress: '',
+    patientName: (item && item.patientName) || '',
+    disease: (item && item.disease) || '',
+    mobileNumber: (item && item.mobileNumber) || '',
+    email: (item && item.email) || '',
+    homeAddress: (item && item.homeAddress) || '',
   });
-  let {navigation} = props;
+
+  // useEffect(() => {
+  //   return () => setIsUpdate(false);
+  // });
   //handle patient
   const handlePatient = (text) => {
     setFileds({...fields, patientName: text});
@@ -37,6 +50,7 @@ const AddPatient = (props) => {
     setFileds({...fields, homeAddress: text});
   };
 
+  //add patient
   const addpatient = () => {
     console.log('addPatient', props.addPatientRequest);
     const {patientName, disease, mobileNumber, email, homeAddress} = fields;
@@ -51,9 +65,16 @@ const AddPatient = (props) => {
       console.log('okay ki report hai');
       props.addPatientRequest(fields);
       // setFileds({})
-    } else alert('fields are not empty');
+    } else alert('Ankho wala bhai');
   };
-  console.log('fields', fields);
+
+  //update patient
+  const updatePatient = () => {
+    alert('abc');
+  };
+
+  console.log('fields==>props', route.params);
+  console.log('route params', isUpdate);
   return (
     <ScrollView>
       <Icon
@@ -75,7 +96,9 @@ const AddPatient = (props) => {
         Patient Records
       </Text>
       <View style={styles.formStyle}>
-        <Text style={styles.heading}>Add Patient</Text>
+        <Text style={styles.heading}>
+          {isUpdate ? `Update Patient` : `Add Patient`}
+        </Text>
         <Input
           placeholderTextColor="black"
           placeholder="Patient Name"
@@ -109,15 +132,17 @@ const AddPatient = (props) => {
           value={fields.homeAddress}
         />
 
-        <Button onPress={addpatient}>
-          <Text style={styles.textColor}>Save</Text>
+        <Button onPress={isUpdate ? updatePatient : addpatient}>
+          <Text style={styles.textColor}>{isUpdate ? 'Update' : 'Save'}</Text>
         </Button>
       </View>
     </ScrollView>
   );
 };
 
-export default connect(null, {addPatientRequest})(AddPatient);
+export default connect(null, {addPatientRequest, updatePatientRequest})(
+  AddPatient,
+);
 
 const styles = StyleSheet.create({
   formStyle: {

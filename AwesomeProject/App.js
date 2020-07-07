@@ -15,10 +15,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 // import {Icon, Left, Button} from 'native-base';
 import Icon from 'react-native-vector-icons/Feather';
-import {Provider} from 'react-redux';
-import {store} from './redux/store';
+// import {Provider} from 'react-redux';
+// import {store} from './redux/store';
 import {isLogedIn} from './config/constant';
-
+import {connect} from 'react-redux';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -48,70 +48,82 @@ function Root(props) {
         }}
       />
 
+      <Stack.Screen
+        name="UpdatePatients"
+        component={AddPatient}
+        options={{headerShown: false}}
+      />
+
       {/* <Stack.Screen name="Settings" component={Settings} /> */}
     </Stack.Navigator>
   );
 }
-const App = () => {
+const App = (props) => {
   const [isAuthenticated, setIsAuththenticated] = useState(null);
   useEffect(() => {
     isLogedIn().then((user) => setIsAuththenticated(user));
-  }, []);
+  }, [isAuthenticated]);
+
+  const {userToken} = props.authData;
   return (
     <>
-      <Provider store={store}>
-        <NavigationContainer>
-          {isAuthenticated ? (
-            <Drawer.Navigator
-              initialRouteName="View-Patients"
-              // navigationOptions={
-              //   {
-              //     headerStyle: {
-              //       backgroundColor: '#f4511e',
-              //     },
-              //     drawerBackgroundColor: '#262A2C'
-              //   }
-              // }
-            >
-              <Drawer.Screen name="View-Patients" component={Root} />
-              <Drawer.Screen name="AddPatients" component={AddPatient} />
-            </Drawer.Navigator>
-          ) : (
-            <Stack.Navigator initialRouteName="Login">
-              <Stack.Screen
-                name="Login"
-                component={LoginScreen}
-                options={{
-                  title: ' Please Login to Continue',
-                  headerStyle: {
-                    backgroundColor: '#4eb6bb',
-                  },
-                  headerTintColor: '#fff',
-                  headerTitleStyle: {
-                    fontWeight: 'bold',
-                  },
-                }}
-              />
-              <Stack.Screen
-                name="Register"
-                options={{
-                  title: 'Back to Login',
-                  headerStyle: {
-                    backgroundColor: '#4eb6bb',
-                  },
-                  headerTintColor: '#fff',
-                  headerTitleStyle: {
-                    fontWeight: 'bold',
-                  },
-                }}
-                component={SignupScreen}
-              />
-            </Stack.Navigator>
-          )}
-        </NavigationContainer>
-      </Provider>
+      <NavigationContainer>
+        {userToken || isAuthenticated ? (
+          <Drawer.Navigator
+            initialRouteName="View-Patients"
+            // navigationOptions={
+            //   {
+            //     headerStyle: {
+            //       backgroundColor: '#f4511e',
+            //     },
+            //     drawerBackgroundColor: '#262A2C'
+            //   }
+            // }
+          >
+            <Drawer.Screen name="View-Patients" component={Root} />
+            <Drawer.Screen name="AddPatients" component={AddPatient} />
+            {/* <Drawer.Screen name="UpdatePatients" component={AddPatient} /> */}
+          </Drawer.Navigator>
+        ) : (
+          <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{
+                title: ' Please Login to Continue',
+                headerStyle: {
+                  backgroundColor: '#4eb6bb',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Register"
+              options={{
+                title: 'Back to Login',
+                headerStyle: {
+                  backgroundColor: '#4eb6bb',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}
+              component={SignupScreen}
+            />
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
     </>
   );
 };
 
-export default App;
+export default connect(
+  (storeState) => ({
+    authData: storeState.AuthReducer,
+  }),
+  null,
+)(App);

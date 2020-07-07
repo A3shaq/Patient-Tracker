@@ -105,6 +105,13 @@ const Patient = (props) => {
             <PatientCard
               name={item.patientName}
               key={index}
+              onUpdate={() => {
+                /* 1. Navigate to the Details route with params */
+                navigation.navigate('UpdatePatients', {
+                  isUpdate: true,
+                  item,
+                });
+              }}
               onLongPress={() => props.deletePatientRequest(item.patientId)}
             />
           ))

@@ -4,8 +4,8 @@ import Logo from '../../assests/images/logo.png';
 import Icon from 'react-native-vector-icons/Feather';
 
 const Card = (props) => {
-  const {name} = props;
-  console.log("patient name console",name)
+  const {name, onPress, onUpdate} = props;
+  console.log('patient console==>', props);
   return (
     <TouchableOpacity style={styles.cardStyles} activeOpacity={0.2} {...props}>
       <View>
@@ -23,7 +23,12 @@ const Card = (props) => {
         </Text>
       </View>
       <View>
-        <Icon name="edit-3" size={30} color="#4eb6bb" onPress={()=>alert("Edit Screen")} />
+        <Icon
+          name="edit-3"
+          size={30}
+          color="#4eb6bb"
+          onPress={() => onUpdate()}
+        />
       </View>
     </TouchableOpacity>
   );

@@ -1,16 +1,18 @@
-import {put, takeLatest, take, call, fork, takeEvery} from 'redux-saga/effects';
+import {put, takeLatest, take, call} from 'redux-saga/effects';
 import {
   ADD_PATIENT_REQUEST,
   GET_PATEINT_REQUEST,
   DEL_PATEINT_REQUEST,
+  UPDATE_PATIENT_REQUEST,
 } from '../config/Types';
 import {firebase} from '../config/firebase';
+import {isLogedIn} from '../config/constant';
 import {
   addPatientSuccess,
   addPatientError,
   getPatientSuccess,
   getPatientError,
-  getPatientRequest,
+  // getPatientRequest,
   deletePatientError,
   deletePatientSuccess,
 } from '../redux/actions/Patient';
@@ -19,12 +21,13 @@ import {eventChannel} from 'redux-saga';
 //add patient
 const addPatientApi = (body) => {
   let curentTime = moment().format('YYYY-MM-DD HH:mm:ss');
-  let doctorId;
-  //firebase.auth().currentUser.uid;
+  // let doctorId = await isLogedIn();
+  let doctorId = firebase.auth().currentUser.uid;
+  console.log('docterID response', doctorId);
   return firebase
     .database()
     .ref('/patients')
-    .push({...body, doctorId: 'hygrygtyuguhr', curentTime});
+    .push({...body, doctorId, curentTime});
 
   // console.log('doctorId', doctorId);
 };
@@ -53,11 +56,14 @@ const createEventChannel = () => {
       .ref('/patients')
       .on('value', (allPateints) => {
         // console.log('data val', Object.keys(allPateints.val()));
+        let userId = firebase.auth().currentUser.uid;
         allPateints = allPateints.val();
         let result = [];
         for (let patient in allPateints) {
-          console.log('/patients ==>', patient);
-          result = [{...allPateints[patient], patientId: patient}, ...result];
+          if (allPateints[patient].doctorId === userId) {
+            console.log('/patients ==>', patient);
+            result = [{...allPateints[patient], patientId: patient}, ...result];
+          }
         }
         emit(result);
       });
@@ -91,7 +97,6 @@ const deleteAPI = (patientId) => {
 };
 
 function* deletePateintSaga(action) {
-  
   let res;
   try {
     res = yield call(deleteAPI, action.doctorId);
@@ -103,8 +108,19 @@ function* deletePateintSaga(action) {
   }
 }
 // del patient
+
+// update patient
+
+function* updatePatientSaga(action) {
+  let res;
+  console.log('update patient saga===>', action);
+}
+
+// update patient
+
 export function* watchPatientSagas() {
   yield takeLatest(ADD_PATIENT_REQUEST, addPatinetSaga);
   yield takeLatest(GET_PATEINT_REQUEST, getPatinetSaga);
   yield takeLatest(DEL_PATEINT_REQUEST, deletePateintSaga);
+  yield takeLatest(UPDATE_PATIENT_REQUEST, updatePatientSaga);
 }
