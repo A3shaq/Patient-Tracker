@@ -10,7 +10,8 @@ import {
   DEL_PATEINT_ERROR,
   UPDATE_PATIENT_REQUEST,
   UPDATE_PATIENT_SUCCESS,
-  UPDATE_PATIENT_ERROR
+  UPDATE_PATIENT_ERROR,
+  STOP_PATIENT_SAGA
 } from '../../config/Types';
 
 export const addPatientRequest = (body) => {
@@ -39,7 +40,7 @@ export const getPatientRequest = () => {
 };
 
 export const getPatientSuccess = (response) => {
-  console.log("get success action",response)
+  // console.log('get success action', response);
   return {
     type: GET_PATEINT_SUCCESS,
     response,
@@ -55,7 +56,7 @@ export const getPatientError = () => {
 export const deletePatientRequest = (doctorId) => {
   return {
     type: DEL_PATEINT_REQUEST,
-    doctorId
+    doctorId,
   };
 };
 
@@ -65,15 +66,14 @@ export const deletePatientSuccess = () => {
   };
 };
 
-
 export const deletePatientError = () => {
   return {
     type: DEL_PATEINT_ERROR,
   };
 };
 
-
 export const updatePatientRequest = (body) => {
+  console.log('updatePatientRequest', body);
   return {
     type: UPDATE_PATIENT_REQUEST,
     body,
@@ -91,3 +91,10 @@ export const updatePatientError = () => {
     type: UPDATE_PATIENT_ERROR,
   };
 };
+
+
+export const stopPatientListner =()=>{
+  return{
+    type:STOP_PATIENT_SAGA
+  }
+}

@@ -1,9 +1,10 @@
-import {put, takeLatest, take, call} from 'redux-saga/effects';
+import {put, takeLatest, take, call, race} from 'redux-saga/effects';
 import {
   ADD_PATIENT_REQUEST,
   GET_PATEINT_REQUEST,
   DEL_PATEINT_REQUEST,
   UPDATE_PATIENT_REQUEST,
+  STOP_PATIENT_SAGA,
 } from '../config/Types';
 import {firebase} from '../config/firebase';
 import {isLogedIn} from '../config/constant';
@@ -15,9 +16,12 @@ import {
   // getPatientRequest,
   deletePatientError,
   deletePatientSuccess,
+  updatePatientSuccess,
+  updatePatientError,
 } from '../redux/actions/Patient';
 import moment from 'moment';
 import {eventChannel} from 'redux-saga';
+
 //add patient
 const addPatientApi = (body) => {
   let curentTime = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -61,13 +65,13 @@ const createEventChannel = () => {
         let result = [];
         for (let patient in allPateints) {
           if (allPateints[patient].doctorId === userId) {
-            console.log('/patients ==>', patient);
+            // console.log('/patients ==>', patient);
             result = [{...allPateints[patient], patientId: patient}, ...result];
           }
         }
         emit(result);
       });
-    return () => database.ref('/patients').off(listener);
+    return () => firebase.database().ref('/patients').off("value");
   });
 
   return listener;
@@ -78,10 +82,25 @@ function* getPatinetSaga() {
   let res;
   try {
     const updateChannel = createEventChannel();
-    while (true) {
-      const response = yield take(updateChannel);
-      console.log('SUccess get', response);
-      yield put(getPatientSuccess(response));
+    let cancelled = false;
+
+    while (!cancelled) {
+      const {task, cancel} = yield race({
+        cancel: take(STOP_PATIENT_SAGA),
+        task: take(updateChannel),
+      });
+      console.log("ghy==>",cancel,task)
+      if (cancel) {
+        console.log('cancel===>', cancel);
+        updateChannel.close();
+        cancelled = true;
+      } else {
+        console.log('task==>');
+        console.log('SUccess get====>');
+
+        yield put(getPatientSuccess(task));
+      }
+      // const response = yield take(updateChannel);
     }
   } catch (e) {
     //   alert("get erro")
@@ -110,10 +129,23 @@ function* deletePateintSaga(action) {
 // del patient
 
 // update patient
+function UpdatePatientApi(body) {
+  let {patientId, ...newBody} = body;
+  console.log('update API', newBody);
+  return firebase.database().ref(`/patients/${body.patientId}`).update(body);
+}
 
 function* updatePatientSaga(action) {
   let res;
   console.log('update patient saga===>', action);
+  try {
+    res = yield call(UpdatePatientApi, action.body);
+    console.log('res==>Update', res);
+    yield put(updatePatientSuccess());
+  } catch (e) {
+    console.log('update pateint failed==>', e);
+    yield put(updatePatientError());
+  }
 }
 
 // update patient

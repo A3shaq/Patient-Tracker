@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   AsyncStorage,
   FlatList,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Button from '../../../components/Button';
 import SearchBar from '../../../components/Input';
@@ -14,19 +16,22 @@ import {NavigationContainer} from '@react-navigation/native';
 import moment from 'moment';
 import DatePicker from 'react-native-datepicker';
 import PatientCard from '../../../components/Card';
-import {Item} from 'native-base';
 import {connect} from 'react-redux';
 import {
   getPatientRequest,
   deletePatientRequest,
+  stopPatientListner,
 } from '../../../redux/actions/Patient';
+
 const Patient = (props) => {
   const [date, seDate] = useState(moment());
   const {navigation} = props;
   useEffect(() => {
     console.log(props.getPatientRequest, 'useEffect');
     props.getPatientRequest();
-    return () => console.log('Un mOunt=====>');
+    return () => {
+      console.log("CANCEL====>")
+      props.stopPatientListner()};
   }, []);
 
   // console.log(
@@ -42,6 +47,7 @@ const Patient = (props) => {
   // );
 
   console.log('pateint records', props.patientRecords.patients);
+  let {patientRecords} = props;
   return (
     <View style={styles.filters}>
       <View style={{height: 20}}></View>
@@ -96,25 +102,47 @@ const Patient = (props) => {
           keyExtractor={(item) => item.doctorId}
         /> */}
         {
+          patientRecords && !patientRecords.loading ? (
+            patientRecords.patients.map((item, index) => (
+              <PatientCard
+                name={item.patientName}
+                key={index}
+                onUpdate={() => {
+                  /* 1. Navigate to the Details route with params */
+                  navigation.navigate('UpdatePatients', {
+                    isUpdate: true,
+                    item,
+                  });
+                }}
+                onLongPress={() => {
+                  Alert.alert(
+                    '',
+                    'do you really want to delete this patient record',
+                    [
+                      {
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                      },
+                      {
+                        text: 'OK',
+                        onPress: () =>
+                          props.deletePatientRequest(item.patientId),
+                      },
+                    ],
+                  );
+                }}
+              />
+            ))
+          ) : (
+            <View style={{marginTop: 70}}>
+              <ActivityIndicator size={60} />
+            </View>
+          )
           //Array.filter((patient)=>(
           // patient.includes(serach)
 
           //         ))
-
-          props.patientRecords.patients.map((item, index) => (
-            <PatientCard
-              name={item.patientName}
-              key={index}
-              onUpdate={() => {
-                /* 1. Navigate to the Details route with params */
-                navigation.navigate('UpdatePatients', {
-                  isUpdate: true,
-                  item,
-                });
-              }}
-              onLongPress={() => props.deletePatientRequest(item.patientId)}
-            />
-          ))
         }
       </ScrollView>
     </View>
@@ -124,7 +152,7 @@ export default connect(
   (storeState) => ({
     patientRecords: storeState.PatientReducer,
   }),
-  {getPatientRequest, deletePatientRequest},
+  {getPatientRequest, deletePatientRequest, stopPatientListner},
 )(Patient);
 
 const styles = StyleSheet.create({

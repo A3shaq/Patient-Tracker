@@ -3,11 +3,12 @@ import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import Logo from '../../assests/images/logo.png';
 import Icon from 'react-native-vector-icons/Feather';
 
+
 const Card = (props) => {
   const {name, onPress, onUpdate} = props;
   console.log('patient console==>', props);
   return (
-    <TouchableOpacity style={styles.cardStyles} activeOpacity={0.2} {...props}>
+    <TouchableOpacity style={styles.cardStyles} activeOpacity={0.8} {...props}>
       <View>
         <Image style={{height: 60, width: 60}} source={Logo} />
       </View>

@@ -39,7 +39,7 @@ export default (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, {loading: true});
 
     case GET_PATEINT_SUCCESS:
-      console.log('GET_PATEINT_SUCCESS', action);
+      // console.log('GET_PATEINT_SUCCESS', action);
       return Object.assign({}, state, {
         patients: action.response,
         loading: false,

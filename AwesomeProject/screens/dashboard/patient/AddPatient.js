@@ -70,7 +70,22 @@ const AddPatient = (props) => {
 
   //update patient
   const updatePatient = () => {
-    alert('abc');
+    const {patientName, disease, mobileNumber, email, homeAddress} = fields;
+
+    if (
+      patientName.trim() &&
+      disease.trim() &&
+      mobileNumber.trim() &&
+      email.trim() &&
+      homeAddress.trim()
+    ) {
+      alert('Update');
+      let {patientId} = item;
+      // console.log('Patient RecordId', patientId);
+      const obj = {...fields, patientId};
+      console.log('obj==>', obj);
+      props.updatePatientRequest(obj);
+    } else alert('fileds are not empty');
   };
 
   console.log('fields==>props', route.params);
