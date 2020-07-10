@@ -6,6 +6,9 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_ERROR,
+  SET_USER_TOKEN,
+  REMOVE_USER_TOKEN,
+  REMOVE_USER_TOKEN_SUCCESS
 } from '../../config/Types';
 
 export const signUpRequest = (name, email, password) => {
@@ -57,5 +60,24 @@ export const loginSuccess = (uid) => {
 export const loginError = () => {
   return {
     type: LOGIN_ERROR,
+  };
+};
+
+export const setUserToken = (userToken) => {
+  return {
+    type: SET_USER_TOKEN,
+    userToken,
+  };
+};
+
+export const logoutUserRequest = () => {
+  return {
+    type: REMOVE_USER_TOKEN,
+  };
+};
+
+export const logoutUserSuccess = () => {
+  return {
+    type: REMOVE_USER_TOKEN_SUCCESS,
   };
 };

@@ -9,18 +9,36 @@ import 'react-native-gesture-handler';
 import React, {useState, useEffect} from 'react';
 import {SignupScreen, LoginScreen} from './screens/auth';
 import {Patient, AddPatient} from './screens/dashboard/patient';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {createDrawerNavigator, DrawerItem} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 // import {Icon, Left, Button} from 'native-base';
 import Icon from 'react-native-vector-icons/Feather';
+import Logout from 'react-native-vector-icons/Feather';
 // import {Provider} from 'react-redux';
 // import {store} from './redux/store';
 import {isLogedIn} from './config/constant';
 import {connect} from 'react-redux';
+import {
+  setUserToken,
+  logoutUserRequest,
+} from '../AwesomeProject/redux/actions/Auth';
+import SplashScreen from '../AwesomeProject/screens/SplashScreen';
+import {store} from './redux/store';
+
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+
+const logoutIcon = (nav) => (
+  <Icon
+    name="power"
+    size={30}
+    color="black"
+    style={{marginRight: 15}}
+    onPress={() => store.dispatch(logoutUserRequest())}
+  />
+);
 
 const myIcon = (nav) => (
   <Icon
@@ -45,6 +63,7 @@ function Root(props) {
           },
           headerTintColor: '#fff',
           headerLeft: () => myIcon(props),
+          headerRight: () => logoutIcon(props),
         }}
       />
 
@@ -59,16 +78,32 @@ function Root(props) {
   );
 }
 const App = (props) => {
+  const [showSplashScreen, setShowSplashScreen] = useState(true);
   const [isAuthenticated, setIsAuththenticated] = useState(null);
   useEffect(() => {
-    isLogedIn().then((user) => setIsAuththenticated(user));
-  }, [isAuthenticated]);
+    isLogedIn().then((user) => props.setUserToken(user || false));
+  }, []);
+  // spalsh screen effect
+  useEffect(() => {
+    setTimeout(() => {
+      setShowSplashScreen(false);
+    }, 3000);
+  }, []);
 
   const {userToken} = props.authData;
+  const userTokenSet = userToken || userToken === false;
   return (
     <>
       <NavigationContainer>
-        {userToken || isAuthenticated ? (
+        {showSplashScreen || !userTokenSet ? (
+          <Stack.Navigator initialRouteName="Splash-screen">
+            <Stack.Screen
+              name="Splash-screen"
+              component={SplashScreen}
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        ) : userToken ? (
           <Drawer.Navigator
             initialRouteName="View-Patients"
             // navigationOptions={
@@ -82,6 +117,8 @@ const App = (props) => {
           >
             <Drawer.Screen name="View-Patients" component={Root} />
             <Drawer.Screen name="AddPatients" component={AddPatient} />
+            {/* <DrawerItem onPress={() => alert('Logout===>')} /> */}
+
             {/* <Drawer.Screen name="UpdatePatients" component={AddPatient} /> */}
           </Drawer.Navigator>
         ) : (
@@ -125,5 +162,5 @@ export default connect(
   (storeState) => ({
     authData: storeState.AuthReducer,
   }),
-  null,
+  {setUserToken, logoutUserRequest},
 )(App);

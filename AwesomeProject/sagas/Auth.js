@@ -1,9 +1,10 @@
 import {put, takeLatest, call} from 'redux-saga/effects';
-import {AsyncStorage} from 'react-native'
+import {AsyncStorage} from 'react-native';
 import {
   SIGNUP_REQUSET,
   SET_USER_DATA_REQUEST,
   LOGIN_REQUEST,
+  REMOVE_USER_TOKEN,
 } from '../config/Types';
 import {firebase} from '../config/firebase';
 import {
@@ -11,6 +12,7 @@ import {
   signUpError,
   setUser,
   loginSuccess,
+  logoutUserSuccess,
 } from '../redux/actions/Auth';
 // import {set} from 'react-native-reanimated';
 
@@ -91,7 +93,7 @@ function* loginSaga(action) {
   try {
     res = yield call(loginAPi, action);
     console.log(res, 'loginnnnn sucessssss');
-    AsyncStorage.setItem("userToken",JSON.stringify(res.user.uid))
+    AsyncStorage.setItem('userToken', JSON.stringify(res.user.uid));
     yield put(loginSuccess(res.user.uid));
   } catch (e) {
     alert(e);
@@ -99,8 +101,25 @@ function* loginSaga(action) {
 }
 //login saga
 
+// logout saga
+
+function* logoutSaga() {
+  // let res;
+  try {
+    console.log('signOut');
+    yield firebase.auth().signOut();
+     yield AsyncStorage.removeItem('userToken');
+    yield put(logoutUserSuccess());
+  } catch (e) {
+    console.log('logOutSaga',e);
+  }
+}
+
+// logout saga
+
 export function* watchAuthentication() {
   yield takeLatest(SIGNUP_REQUSET, signUpSaga);
   yield takeLatest(SET_USER_DATA_REQUEST, setUserSaga);
   yield takeLatest(LOGIN_REQUEST, loginSaga);
+  yield takeLatest(REMOVE_USER_TOKEN, logoutSaga);
 }

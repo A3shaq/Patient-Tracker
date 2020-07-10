@@ -7,6 +7,7 @@ import {
   STOP_PATIENT_SAGA,
 } from '../config/Types';
 import {firebase} from '../config/firebase';
+import {ToastAndroid} from 'react-native'
 import {isLogedIn} from '../config/constant';
 import {
   addPatientSuccess,
@@ -42,6 +43,13 @@ function* addPatinetSaga(action) {
     res = yield call(addPatientApi, action.body);
     console.log('res patiend added', res);
     yield put(addPatientSuccess());
+    ToastAndroid.showWithGravityAndOffset(
+      "Patient Added",
+      ToastAndroid.LONG,
+      ToastAndroid.CENTER,
+      25,
+      50
+    );
   } catch (e) {
     alert('patient add error');
     console.log('patient Add error');
@@ -71,7 +79,7 @@ const createEventChannel = () => {
         }
         emit(result);
       });
-    return () => firebase.database().ref('/patients').off("value");
+    return () => firebase.database().ref('/patients').off('value');
   });
 
   return listener;
@@ -80,32 +88,44 @@ const createEventChannel = () => {
 function* getPatinetSaga() {
   console.log('patient saga =========>');
   let res;
+  let updateChannel;
   try {
-    const updateChannel = createEventChannel();
+    updateChannel = createEventChannel();
     let cancelled = false;
 
     while (!cancelled) {
-      const {task, cancel} = yield race({
-        cancel: take(STOP_PATIENT_SAGA),
-        task: take(updateChannel),
-      });
-      console.log("ghy==>",cancel,task)
-      if (cancel) {
-        console.log('cancel===>', cancel);
-        updateChannel.close();
-        cancelled = true;
-      } else {
-        console.log('task==>');
-        console.log('SUccess get====>');
+      try {
+        const {task, cancel} = yield race({
+          cancel: take(STOP_PATIENT_SAGA),
+          task: take(updateChannel),
+        });
 
-        yield put(getPatientSuccess(task));
+        console.log('ghy==>', cancel, task);
+        if (cancel) {
+          console.log('cancel===>', cancel);
+          updateChannel.close();
+          cancelled = true;
+        } else {
+          console.log('task==>');
+          console.log('SUccess get====>');
+
+          yield put(getPatientSuccess(task));
+        }
+      } catch (e) {
+        // alert("kk")
+        console.log('===> catch errpr');
       }
+
       // const response = yield take(updateChannel);
     }
   } catch (e) {
     //   alert("get erro")
     console.log('firebase ka apna error bta0', e);
     yield put(getPatientError());
+  } finally {
+    if (updateChannel) {
+      updateChannel.close();
+    }
   }
 }
 // get patient

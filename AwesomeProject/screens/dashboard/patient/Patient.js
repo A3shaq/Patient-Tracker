@@ -10,7 +10,6 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import Button from '../../../components/Button';
 import SearchBar from '../../../components/Input';
 import {NavigationContainer} from '@react-navigation/native';
 import moment from 'moment';
@@ -24,34 +23,33 @@ import {
 } from '../../../redux/actions/Patient';
 
 const Patient = (props) => {
-  const [date, seDate] = useState(moment());
+  const [date, seDate] = useState(undefined);
+  const [search, setSearch] = useState('');
   const {navigation} = props;
   useEffect(() => {
     console.log(props.getPatientRequest, 'useEffect');
     props.getPatientRequest();
     return () => {
-      console.log("CANCEL====>")
-      props.stopPatientListner()};
+      console.log('CANCEL==--=>');
+      props.stopPatientListner();
+    };
   }, []);
 
-  // console.log(
-  //   'abc',
-  //   AsyncStorage.getItem('userToken').then((item) => {
-  //     if (item) {
-  //       // do the damage
-  //       console.log('async cosole', item);
-  //     }
-  //   }
-
-  //   ),
-  // );
+  const hanldeSearch = (e) => {
+    console.log('handle serach');
+    setSearch(e);
+  };
 
   console.log('pateint records', props.patientRecords.patients);
   let {patientRecords} = props;
   return (
     <View style={styles.filters}>
       <View style={{height: 20}}></View>
-      <SearchBar placeholder="Search" />
+      <SearchBar
+        value={search}
+        placeholder="Search"
+        onChangeText={(e) => hanldeSearch(e, 'Search')}
+      />
       <View>
         {/* <View> */}
 
@@ -103,37 +101,69 @@ const Patient = (props) => {
         /> */}
         {
           patientRecords && !patientRecords.loading ? (
-            patientRecords.patients.map((item, index) => (
-              <PatientCard
-                name={item.patientName}
-                key={index}
-                onUpdate={() => {
-                  /* 1. Navigate to the Details route with params */
-                  navigation.navigate('UpdatePatients', {
-                    isUpdate: true,
-                    item,
-                  });
-                }}
-                onLongPress={() => {
-                  Alert.alert(
-                    '',
-                    'do you really want to delete this patient record',
-                    [
-                      {
-                        text: 'Cancel',
-                        onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel',
-                      },
-                      {
-                        text: 'OK',
-                        onPress: () =>
-                          props.deletePatientRequest(item.patientId),
-                      },
-                    ],
-                  );
-                }}
-              />
-            ))
+            patientRecords.patients .filter(
+              (patient) =>
+                patient.patientName
+                  .toUpperCase()
+                  .includes(search.toUpperCase()) &&
+                (date
+                  ? moment(patient.curentTime).isSame(
+                      moment(date, 'DD-MMM-YYYY'),
+                      'day',
+                    )
+                  : true),
+            ).length ? (
+              patientRecords.patients
+                .filter(
+                  (patient) =>
+                    patient.patientName
+                      .toUpperCase()
+                      .includes(search.toUpperCase()) &&
+                    (date
+                      ? moment(patient.curentTime).isSame(
+                          moment(date, 'DD-MMM-YYYY'),
+                          'day',
+                        )
+                      : true),
+                )
+                .map((item, index) => (
+                  <PatientCard
+                    name={item.patientName}
+                    key={index}
+                    onUpdate={() => {
+                      /* 1. Navigate to the Details route with params */
+                      navigation.navigate('UpdatePatients', {
+                        isUpdate: true,
+                        item,
+                      });
+                    }}
+                    onLongPress={() => {
+                      Alert.alert(
+                        '',
+                        'do you really want to delete this patient record',
+                        [
+                          {
+                            text: 'Cancel',
+                            onPress: () => console.log('Cancel Pressed'),
+                            style: 'cancel',
+                          },
+                          {
+                            text: 'OK',
+                            onPress: () =>
+                              props.deletePatientRequest(item.patientId),
+                          },
+                        ],
+                      );
+                    }}
+                  />
+                ))
+            ) : (
+              <View style={{marginTop: 70}}>
+                <Text style={{color: 'red', fontSize: 20, fontWeight: '500'}}>
+                  No Records Found
+                </Text>
+              </View>
+            )
           ) : (
             <View style={{marginTop: 70}}>
               <ActivityIndicator size={60} />

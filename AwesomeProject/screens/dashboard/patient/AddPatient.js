@@ -64,7 +64,7 @@ const AddPatient = (props) => {
     ) {
       console.log('okay ki report hai');
       props.addPatientRequest(fields);
-      // setFileds({})
+      setFileds({})
     } else alert('Ankho wala bhai');
   };
 
@@ -85,6 +85,8 @@ const AddPatient = (props) => {
       const obj = {...fields, patientId};
       console.log('obj==>', obj);
       props.updatePatientRequest(obj);
+      navigation.goBack()
+
     } else alert('fileds are not empty');
   };
 

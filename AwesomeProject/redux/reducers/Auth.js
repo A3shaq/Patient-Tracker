@@ -5,11 +5,14 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_ERROR,
+  SET_USER_TOKEN,
+  REMOVE_USER_TOKEN,
+  REMOVE_USER_TOKEN_SUCCESS,
 } from '../../config/Types';
 
 const INITIAL_STATE = {
   loading: false,
-  userToken: '',
+  userToken: null,
 };
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -39,6 +42,13 @@ export default (state = INITIAL_STATE, action) => {
 
     case LOGIN_ERROR:
       return Object.assign({}, state, {loading: false});
+    case SET_USER_TOKEN:
+      return Object.assign({}, state, {userToken: action.userToken});
+
+    case REMOVE_USER_TOKEN:
+      return Object.assign({}, state, {loading: true});
+    case REMOVE_USER_TOKEN_SUCCESS:
+      return Object.assign({}, state, {userToken: false, loading: false});
 
     default: {
       return state;
