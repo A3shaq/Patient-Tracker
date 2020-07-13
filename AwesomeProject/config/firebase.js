@@ -12,28 +12,6 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-console.log('firebase', firebase);
-const RegisterWithFirebase = (name, email, password) => {
-  console.log('Register');
+// console.log('firebase', firebase);
 
-  firebase
-    .auth()
-    .createUserWithEmailAndPassword(email, password)
-    .then((val) => {
-      console.log('snap Firebase', val.user);
-      let users = {
-        name,
-        email,
-        password,
-        uid: val.user.uid,
-      };
-      firebase
-        .database()
-        .ref()
-        .child(`users/${users.uid}`)
-        .set(users)
-        .then((sucess) => console.log());
-    });
-};
-
-export {firebase, RegisterWithFirebase};
+export {firebase};

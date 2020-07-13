@@ -64,8 +64,8 @@ const AddPatient = (props) => {
     ) {
       console.log('okay ki report hai');
       props.addPatientRequest(fields);
-      setFileds({})
-    } else alert('Ankho wala bhai');
+      setFileds({});
+    } else alert('fields are not empty');
   };
 
   //update patient
@@ -85,9 +85,8 @@ const AddPatient = (props) => {
       const obj = {...fields, patientId};
       console.log('obj==>', obj);
       props.updatePatientRequest(obj);
-      navigation.goBack()
-
-    } else alert('fileds are not empty');
+      navigation.goBack();
+    } else alert('fields are not empty');
   };
 
   console.log('fields==>props', route.params);
